@@ -7,15 +7,15 @@ import 'izitoast/dist/css/iziToast.min.css';
 import { fetchPhotosByQuery } from './js/pixabay-api';
 import { createGalleryCardTemplate } from './js/render-functions';
 
-let userQuery = '';
-const apiKey = '48282955-b9198e6094f2e0ac61d0770f4';
-
 const galleryFromPixabay = document.querySelector('.gallery-from-pixabay');
+const userSearchForm = document.querySelector('.user-search');
+let loader = document.querySelector('.loader');
 
 const inputSubmitHandler = event => {
   event.preventDefault();
-  userQuery = document.querySelector('.input-user-search');
-  if (!userQuery.value.trim()) {
+
+  const userQuery = document.querySelector('.input-user-search').value.trim();
+  if (!userQuery) {
     iziToast.error({
       title: '❌',
       message: `The field must be filled!`,
@@ -25,18 +25,15 @@ const inputSubmitHandler = event => {
       icon: false,
       timeout: 3000,
     });
+    userSearchForm.reset();
     return;
   }
-
-  const url = `https://pixabay.com/api/?key=${apiKey}&q=${userQuery.value}&image_type=photo&orientation=horizontal&safesearch=true`;
-
-  let loader = document.querySelector('.loader');
 
   galleryFromPixabay.innerHTML = '';
 
   loader.style.display = 'block';
 
-  fetchPhotosByQuery(url)
+  fetchPhotosByQuery(userQuery)
     .then(data => {
       loader.style.display = 'none';
       if (data.total === 0) {
@@ -61,10 +58,21 @@ const inputSubmitHandler = event => {
         heightRatio: 0.8,
       });
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      loader.style.display = 'none';
+      iziToast.error({
+        title: '❌',
+        message: error.toString(),
+        position: 'topRight',
+        progressBar: true,
+        close: false,
+        icon: false,
+        timeout: 3000,
+      });
+    });
 
-  userQuery.value = '';
+  userSearchForm.reset();
 };
 
-const inputUserQuery = document.querySelector('.button-user-search');
-inputUserQuery.addEventListener('click', inputSubmitHandler);
+const inputUserQuery = document.querySelector('.user-search');
+inputUserQuery.addEventListener('submit', inputSubmitHandler);
