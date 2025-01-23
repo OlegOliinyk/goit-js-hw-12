@@ -11,6 +11,13 @@ const galleryFromPixabay = document.querySelector('.gallery-from-pixabay');
 const userSearchForm = document.querySelector('.user-search');
 let loader = document.querySelector('.loader');
 
+const lightbox = new SimpleLightbox('.gallery-link', {
+  captions: false,
+  captionDelay: 250,
+  widthRatio: 0.8,
+  heightRatio: 0.8,
+});
+
 const inputSubmitHandler = event => {
   event.preventDefault();
 
@@ -51,12 +58,13 @@ const inputSubmitHandler = event => {
       const galleryTemplate = createGalleryCardTemplate(data.hits);
       galleryFromPixabay.innerHTML = galleryTemplate;
 
-      new SimpleLightbox('.gallery-link', {
-        captions: false,
-        captionDelay: 250,
-        widthRatio: 0.8,
-        heightRatio: 0.8,
-      });
+      // new SimpleLightbox('.gallery-link', {
+      //   captions: false,
+      //   captionDelay: 250,
+      //   widthRatio: 0.8,
+      //   heightRatio: 0.8,
+      // });
+      lightbox.refresh();
     })
     .catch(error => {
       loader.style.display = 'none';
