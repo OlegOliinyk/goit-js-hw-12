@@ -40,7 +40,8 @@
   border-color: #000000;
 }
 
-.button-user-search {
+.button-user-search,
+.load-more {
   border-width: 0;
   border-radius: 8px;
   font-family: 'Montserrat-Medium', sans-serif;
@@ -115,4 +116,14 @@ p {
 
 .details-icon {
   font-size: 24px;
+}
+
+.load-more {
+  display: block;
+  margin: 24px auto;
+  width: auto;
+}
+
+.hidden {
+  display: none;
 }
