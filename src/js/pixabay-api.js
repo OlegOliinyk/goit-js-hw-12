@@ -13,11 +13,13 @@ export async function fetchPhotosByQuery(userQuery, pageNumber) {
         safesearch: true,
       },
     };
+
     const response = await axios.get('https://pixabay.com/api/', axiosOptions);
-    if (response.data.total === 0) return;
-    // throw new Error(
-    //   `Sorry, there are no images matching your search query. Please try again!`
-    // );
+    console.log(response);
+    if (response.data.total === 0)
+      throw new Error(
+        `Sorry, there are no images matching your search query. Please try again!`
+      );
 
     return response;
   } catch (error) {

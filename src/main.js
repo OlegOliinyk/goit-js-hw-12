@@ -49,17 +49,14 @@ const loadMoreBtnHandler = async event => {
     loadMoreBtn.classList.add('hidden');
     loader.classList.remove('hidden');
 
-    const response = await fetchPhotosByQuery(userQuery, page);
-    if (!response) {
-      showError(`We're sorry, but you've reached the end of search results.`);
-      return;
-    }
+    const { data } = await fetchPhotosByQuery(userQuery, page);
+
     loader.classList.add('hidden');
-    const galleryTemplate = createGalleryCardTemplate(response.data.hits);
+    const galleryTemplate = createGalleryCardTemplate(data.hits);
     galleryFromPixabay.insertAdjacentHTML('beforeend', galleryTemplate);
     lightbox.refresh();
     smoothScroll();
-    if (lightbox.elements.length < response.data.totalHits) {
+    if (lightbox.elements.length < data.totalHits) {
       loadMoreBtn.classList.remove('hidden');
     } else {
       loadMoreBtn.removeEventListener('click', loadMoreBtnHandler);
@@ -78,29 +75,19 @@ const inputSubmitHandler = async event => {
     loadMoreBtn.classList.add('hidden');
     userQuery = document.querySelector('.input-user-search').value.trim();
     if (!userQuery) {
-      userSearchForm.reset();
       throw new Error('The field must be filled!');
     }
     galleryFromPixabay.innerHTML = '';
     loader.classList.remove('hidden');
 
-    const response = await fetchPhotosByQuery(userQuery, page);
+    const { data } = await fetchPhotosByQuery(userQuery, page);
 
-    if (!response) {
-       loader.classList.add('hidden');
-       userSearchForm.reset();
-      showError(
-        'Sorry, there are no images matching your search query. Please try again!'
-      );
-      return;
-    }
-
-    const galleryTemplate = createGalleryCardTemplate(response.data.hits);
+    const galleryTemplate = createGalleryCardTemplate(data.hits);
     galleryFromPixabay.innerHTML = galleryTemplate;
     lightbox.refresh();
     loader.classList.add('hidden');
     userSearchForm.reset();
-    if (response.data.totalHits > 15) {
+    if (data.totalHits > 15) {
       loadMoreBtn.classList.remove('hidden');
       loadMoreBtn.addEventListener('click', loadMoreBtnHandler);
     }
