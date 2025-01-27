@@ -87,6 +87,8 @@ const inputSubmitHandler = async event => {
     const response = await fetchPhotosByQuery(userQuery, page);
 
     if (!response) {
+       loader.classList.add('hidden');
+       userSearchForm.reset();
       showError(
         'Sorry, there are no images matching your search query. Please try again!'
       );
